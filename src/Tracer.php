@@ -3,23 +3,9 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Config\Config;
-use IfCastle\Core\Config\FromConfig;
-use IfCastle\Core\DI\AnnotationsTrait;
-use IfCastle\Core\DI\Dependency;
-use IfCastle\Core\DI\InjectInterface;
-use IfCastle\Core\DI\InjectorTrait;
-use IfCastle\Core\Environment\RequestEnvironmentInterface;
-use IfCastle\Core\Environment\SystemEnvironmentInterface;
-use IfCastle\Core\FreeInterface;
-use IfCastle\Core\Services\System\SystemClock;
-use IfCastle\Core\StatefulServers\ScheduleTimerInterface;
-use IfCastle\Core\StatefulServers\StatefulServerInterface;
-use IfCastle\Core\Strategies\PeriodicExecution\PeriodicCallingInterface;
-use IfCastle\Core\Strategies\PeriodicExecution\PeriodicCallingWithDelayOnError;
-use IfCastle\Logger\LoggerInterface;
 use IfCastle\OpenTelemetry\Exceptions\ExporterException;
 use IfCastle\OpenTelemetry\Protocol\TraceTemporaryStorageInterface;
+use Psr\Log\LogLevel;
 
 class Tracer            implements TracerInterface, InjectInterface, FreeInterface
 {
@@ -686,7 +672,7 @@ class Tracer            implements TracerInterface, InjectInterface, FreeInterfa
     {
         return new Log(
             SystemClock::now(),
-            LoggerInterface::ERROR,
+            LogLevel::ERROR,
             $throwable->getMessage(),
             ExceptionFormatter::buildAttributes($throwable),
             $this->selfTrace->getTraceId(),

@@ -45,6 +45,9 @@ interface TracerInterface
     
     /**
      * Final flush of the telemetry.
+     *
+     * @param bool $isCritical
+     *
      * @return void
      */
     public function flushTelemetry(bool $isCritical = false): void;

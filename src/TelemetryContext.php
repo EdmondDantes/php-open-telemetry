@@ -3,26 +3,13 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Environment\Environment;
-use IfCastle\Core\Exceptions\ErrorException;
-use IfCastle\Core\Strategies\Handlers\FinalHandlersInterface;
-use IfCastle\Core\Strategies\Handlers\FinalHandlersTrait;
-
-class TelemetryContext              extends Environment
-                                    implements TelemetryContextInterface, FinalHandlersInterface
+final class TelemetryContext                implements TelemetryContextInterface
 {
-    use FinalHandlersTrait;
-    
     protected ?TraceInterface $trace        = null;
     protected ?\WeakReference $tracer       = null;
     
-    public function __construct(TracerInterface $tracer, array $data = [], TelemetryContextInterface $parent = null)
+    public function __construct(TracerInterface $tracer)
     {
-        parent::__construct(
-            $data,
-            $parent
-        );
-        
         $this->tracer                       = \WeakReference::create($tracer);
         $this->trace                        = $tracer->createTrace();
     }
@@ -47,29 +34,12 @@ class TelemetryContext              extends Environment
         return TraceFlagsEnum::SAMPLED;
     }
     
-    public function free(): void
+    public function end(): void
     {
-        // First, execute final handlers
-        $exceptions                 = $this->executeFinalHandlers();
+        $this->trace?->end();
         
-        try {
-            $this->trace?->end();
-            
-            if($this->trace !== null) {
-                $this->tracer?->get()?->endTrace($this->trace);
-            }
-        } catch(\Throwable $exception) {
-            $exceptions[]           = $exception;
-            // ignore
-        }
-        
-        $this->trace                = null;
-        $this->tracer               = null;
-        
-        parent::free();
-        
-        if(!empty($exceptions)) {
-            $this->throwErrors($exceptions, ['telemetry-context']);
+        if($this->trace !== null) {
+            $this->tracer?->get()?->endTrace($this->trace);
         }
     }
 }

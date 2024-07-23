@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Exceptions\ErrorException;
-
 /**
  * TraceState parses and stores the tracestate header as an immutable list of string
  * key/value pairs. It provides the following operations following the rules described
@@ -59,27 +57,17 @@ class TraceState                    implements AttributesInterface
         return $this;
     }
     
-    /**
-     * @throws ErrorException
-     */
     protected function validateKeyValues(array $attributes): void
     {
         foreach ($attributes as $key => $value) {
             
             if($this->validateKey($key)) {
-                throw new ErrorException([
-                    'template'      => 'TraceState invalid key: "{key}"',
-                    'key'           => $key
-                ]);
+                throw new \Error('TraceState invalid key: '.$key);
             }
             
             if($this->validateValue($value)) {
-                throw new ErrorException([
-                    'template'      => 'TraceState invalid value: "{value}"',
-                    'key'           => $value
-                ]);
+                throw new \Error('TraceState invalid value: '.$value);
             }
-            
         }
     }
     

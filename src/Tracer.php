@@ -30,6 +30,7 @@ class Tracer                        implements TracerInterface
     public function __construct(
         protected ResourceInterface $systemResource,
         protected TelemetryContextResolverInterface $telemetryContextResolver,
+        protected TelemetryFlushStrategyInterface|null $telemetryFlushStrategy = null
     )
     {
         // Create self instrumentation scope
@@ -45,7 +46,7 @@ class Tracer                        implements TracerInterface
     
     public function newTelemetryContext(): TelemetryContextInterface
     {
-        return new TelemetryContext($this);
+        return $this->telemetryContextResolver->newTelemetryContext();
     }
     
     public function createTrace(): TraceInterface
@@ -57,6 +58,7 @@ class Tracer                        implements TracerInterface
     {
         $this->instrumentationScopes    = array_merge($this->instrumentationScopes, $trace->getInstrumentationScopes());
         $this->spans                    = array_merge_recursive($this->spans, $trace->getSpansByInstrumentationScope());
+        $this->telemetryFlushStrategy?->flushTrace($trace);
     }
     
     public function registerLog(InstrumentationScopeInterface    $instrumentationScope,

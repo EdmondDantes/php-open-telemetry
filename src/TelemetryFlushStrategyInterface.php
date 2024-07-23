@@ -5,5 +5,5 @@ namespace IfCastle\OpenTelemetry;
 
 interface TelemetryFlushStrategyInterface
 {
-    
+    public function flushTrace(TraceInterface $trace): void;
 }

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Exceptions\ErrorException;
-
 class Trace                         implements TraceInterface
 {
     protected static int    $counter = 0;
@@ -167,7 +165,7 @@ class Trace                         implements TraceInterface
     public function endSpan(SpanInterface $span = null): void
     {
         if(count($this->spanStack) === 0) {
-            $span->recordException(new ErrorException('Span stack is empty'));
+            $span->recordException(new \Error('Span stack is empty'));
             return;
         }
         
@@ -176,7 +174,7 @@ class Trace                         implements TraceInterface
         }
         
         if($this->spanStack[count($this->spanStack) - 1] !== $span) {
-            $span->recordException(new ErrorException('Span stack last element is not the same as the span to end'));
+            $span->recordException(new \Error('Span stack last element is not the same as the span to end'));
             return;
         }
 
@@ -214,7 +212,7 @@ class Trace                         implements TraceInterface
         $this->spanMap              = [];
     }
     
-    public function free(): void
+    public function dispose(): void
     {
         $this->spanStack            = [];
         $this->spanMap              = [];

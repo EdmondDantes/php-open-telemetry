@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\OpenTelemetry\Exceptions\ExporterException;
-
 class Tracer                        implements TracerInterface
 {
     /**
@@ -25,7 +23,6 @@ class Tracer                        implements TracerInterface
      */
     protected array $logs           = [];
     protected array $spans          = [];
-    protected ?\Throwable $lastFlushError = null;
     protected array $instrumentationScopes = [];
     protected InstrumentationScopeInterface $selfInstrumentationScope;
     protected Trace $selfTrace;

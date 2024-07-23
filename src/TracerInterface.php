@@ -30,25 +30,12 @@ interface TracerInterface
     ): void;
     
     /**
-     * Add exception to the telemetry span context (if defined).
+     * Add an exception to the telemetry span context (if defined).
      *
      * @param \Throwable $throwable
      * @param array      $attributes
      */
     public function registerException(\Throwable $throwable, array $attributes = []): void;
     
-    /**
-     * Called every time when the trace (request) is finished.
-     * @return void
-     */
-    public function flushTrace(): void;
-    
-    /**
-     * Final flush of the telemetry.
-     *
-     * @param bool $isCritical
-     *
-     * @return void
-     */
-    public function flushTelemetry(bool $isCritical = false): void;
+    public function cleanTelemetry(): void;
 }

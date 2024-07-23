@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Logger\LoggerInterface;
+use Psr\Log\LogLevel;
 
 readonly class Log
 {
@@ -27,15 +27,15 @@ readonly class Log
         // According to OpenTelemetry specification
         // @see https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-severitynumber
         return match ($level) {
-            LoggerInterface::EMERGENCY => 23,
-            LoggerInterface::ALERT     => 21,
-            LoggerInterface::CRITICAL  => 20,
-            LoggerInterface::ERROR     => 17,
-            LoggerInterface::WARNING   => 14,
-            LoggerInterface::NOTICE    => 13,
-            LoggerInterface::INFO      => 9,
-            LoggerInterface::DEBUG     => 1,
-            default                    => 0
+            LogLevel::EMERGENCY     => 23,
+            LogLevel::ALERT         => 21,
+            LogLevel::CRITICAL      => 20,
+            LogLevel::ERROR         => 17,
+            LogLevel::WARNING       => 14,
+            LogLevel::NOTICE        => 13,
+            LogLevel::INFO          => 9,
+            LogLevel::DEBUG         => 1,
+            default                 => 0
         };
     }
 }

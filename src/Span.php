@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Services\System\SystemClock;
-
 class Span                          implements SpanInterface
 {
     use ElementTrait;
@@ -22,13 +20,15 @@ class Span                          implements SpanInterface
     protected array  $events          = [];
     protected array $links           = [];
     protected TraceState $traceState;
+    protected ExceptionFormatterInterface|null $exceptionFormatter = null;
     
     public function __construct(
         TraceInterface $trace,
         string $name,
         SpanKindEnum $kind          = null,
         array $attributes           = [],
-        InstrumentationScopeInterface $instrumentationScope = null
+        InstrumentationScopeInterface $instrumentationScope = null,
+        ExceptionFormatterInterface $exceptionFormatter = null
     )
     {
         $this->trace                = \WeakReference::create($trace);
@@ -38,6 +38,7 @@ class Span                          implements SpanInterface
         $this->kind                 = $kind ?? SpanKindEnum::INTERNAL;
         $this->attributes           = $attributes;
         $this->instrumentationScope = $instrumentationScope;
+        $this->exceptionFormatter   = $exceptionFormatter ?? new ExceptionFormatter;
         $this->traceState           = new TraceState();
         
         $this->startTime            = SystemClock::now();

@@ -1,0 +1,17 @@
+{
+    "name": "ifcastle/open-telemetry",
+    "description": "Simplified library for OpenTelemetry.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["open-telemetry", "opentelemetry", "tracing", "instrumentation"],
+    "autoload": {
+        "psr-4": {
+            "IfCastle\\OpenTelemetry\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=8.3",
+        "open-telemetry/gen-otlp-protobuf": "^1.1",
+        "psr/log": "^3.0"
+    }
+}

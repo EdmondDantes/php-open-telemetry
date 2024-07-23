@@ -5,8 +5,6 @@ namespace IfCastle\OpenTelemetry;
 
 interface TracerInterface
 {
-    final public const TRACER       = 'tracer';
-    
     public function getResource(): ResourceInterface;
     
     public function newTelemetryContext(): TelemetryContextInterface;
@@ -15,7 +13,12 @@ interface TracerInterface
     
     public function endTrace(TraceInterface $trace): void;
     
-    public function createSpan(string $spanName, SpanKindEnum $spanKind, InstrumentationScopeInterface $instrumentationScope = null, array $attributes = []): SpanInterface;
+    public function createSpan(
+        string                        $spanName,
+        SpanKindEnum                  $spanKind,
+        InstrumentationScopeInterface $instrumentationScope = null,
+        array                         $attributes           = []
+    ): SpanInterface;
     
     public function endSpan(SpanInterface $span = null): void;
     

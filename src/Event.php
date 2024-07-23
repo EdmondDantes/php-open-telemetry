@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Services\System\SystemClock;
-
 class Event                         implements ElementInterface, AttributesInterface, TimestampInterface
 {
     use ElementTrait;

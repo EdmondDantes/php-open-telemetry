@@ -3,29 +3,12 @@ declare(strict_types=1);
 
 namespace IfCastle\OpenTelemetry;
 
-use IfCastle\Core\Exceptions\BaseException;
-
 final class ExceptionFormatter
 {
-    public static function buildAttributes(\Throwable $throwable): array
+    public function buildAttributes(\Throwable $throwable): array
     {
         // See https://opentelemetry.io/docs/specs/semconv/attributes-registry/exception/
         $attributes['exception.message']        = $throwable->getMessage();
-        
-        // Custom attribute
-        if($throwable instanceof BaseException) {
-            $attributes['exception.template']   = $throwable->getTemplate();
-            // add tags as attributes
-            $attributes['exception.tags']       = $throwable->getTags();
-            $attributes['exception.context']    = $throwable->getContext();
-            
-            if(!empty($attributes['exception.context']['tags'])) {
-                unset($attributes['exception.context']['tags']);
-            }
-            
-            $attributes['exception.debug']      = $throwable->getDebug();
-        }
-        
         $attributes['exception.type']           = get_class($throwable);
         
         $seen                       = [];
@@ -39,16 +22,7 @@ final class ExceptionFormatter
             }
             
             if(count($seen) > 0) {
-                
-                if($throwable instanceof BaseException) {
-                    $trace[]            = [
-                        '[CAUSED BY] '.$throwable->getFile().'('.$throwable->getLine().'): '.get_class($throwable).'::'.$throwable->getTemplate(),
-                        $throwable->getContext(),
-                        $throwable->getDebug()
-                    ];
-                } else {
-                    $trace[]            = '[CAUSED BY] '.$throwable->getFile().'('.$throwable->getLine().'): '.get_class($throwable).'::'.$throwable->getMessage();
-                }
+                $trace[]            = '[CAUSED BY] '.$throwable->getFile().'('.$throwable->getLine().'): '.get_class($throwable).'::'.$throwable->getMessage();
             }
             
             $seen[spl_object_id($throwable)] = $throwable;
